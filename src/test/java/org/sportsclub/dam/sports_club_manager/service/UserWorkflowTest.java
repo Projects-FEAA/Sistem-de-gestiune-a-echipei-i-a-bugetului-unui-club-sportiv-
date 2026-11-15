@@ -10,7 +10,7 @@ import org.sportsclub.dam.sports_club_manager.service.audit.InMemoryAuditService
 import org.sportsclub.dam.sports_club_manager.service.validation.DefaultDomainValidationService;
 import org.sportsclub.dam.sports_club_manager.service.validation.RoleAuthorizationService;
 import org.sportsclub.dam.sports_club_manager.service.workflow.UserWorkflowService;
-import org.sportsclub.dam.sports_club_manager.support.user.InMemoryUserStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.user.InMemoryUserStore;
 
 import static org.junit.jupiter.api.Assertions.*;
 

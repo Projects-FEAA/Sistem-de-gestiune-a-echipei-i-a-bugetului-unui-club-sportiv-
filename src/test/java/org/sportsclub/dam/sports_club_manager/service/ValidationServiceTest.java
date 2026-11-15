@@ -3,16 +3,12 @@ package org.sportsclub.dam.sports_club_manager.service;
 import jakarta.validation.Validation;
 import org.junit.jupiter.api.Test;
 import org.sportsclub.dam.sports_club_manager.domain.enums.ContractType;
+import org.sportsclub.dam.sports_club_manager.domain.enums.ExpenseCategory;
 import org.sportsclub.dam.sports_club_manager.domain.enums.UserRole;
 import org.sportsclub.dam.sports_club_manager.domain.exception.BusinessRuleViolationException;
-import org.sportsclub.dam.sports_club_manager.domain.model.Contract;
-import org.sportsclub.dam.sports_club_manager.domain.model.Injury;
-import org.sportsclub.dam.sports_club_manager.domain.model.User;
+import org.sportsclub.dam.sports_club_manager.domain.model.*;
 import org.sportsclub.dam.sports_club_manager.service.validation.DefaultDomainValidationService;
 import org.sportsclub.dam.sports_club_manager.service.validation.TransactionValidationService;
-import org.sportsclub.dam.sports_club_manager.domain.enums.TransactionCategory;
-import org.sportsclub.dam.sports_club_manager.domain.enums.TransactionType;
-import org.sportsclub.dam.sports_club_manager.domain.model.Transaction;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,7 +17,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ValidationServiceTest {
-    @Test void invalidLoanContractIsRejected() {
+    @Test
+    void invalidLoanContractIsRejected() {
         var factory = Validation.buildDefaultValidatorFactory();
         try {
             DefaultDomainValidationService service = new DefaultDomainValidationService(factory.getValidator());
@@ -33,7 +30,8 @@ class ValidationServiceTest {
         }
     }
 
-    @Test void injuryExpectedReturnMustBeAfterStartDate() {
+    @Test
+    void injuryExpectedReturnMustBeAfterStartDate() {
         var factory = Validation.buildDefaultValidatorFactory();
         try {
             DefaultDomainValidationService service = new DefaultDomainValidationService(factory.getValidator());
@@ -45,7 +43,8 @@ class ValidationServiceTest {
         }
     }
 
-    @Test void userRoleMustMatchPlayerAssociation() {
+    @Test
+    void userRoleMustMatchPlayerAssociation() {
         var factory = Validation.buildDefaultValidatorFactory();
         try {
             DefaultDomainValidationService service = new DefaultDomainValidationService(factory.getValidator());
@@ -56,9 +55,18 @@ class ValidationServiceTest {
         }
     }
 
-    @Test void transactionMustHavePositiveAmount() {
-        Transaction invalid = new Transaction(UUID.randomUUID(), TransactionType.EXPENSE,
-                TransactionCategory.TRAVEL, BigDecimal.ZERO, LocalDate.of(2026, 4, 10), "Invalid amount");
+    @Test
+    void transactionMustHavePositiveAmount() {
+        ExpenseTransaction invalid = new ExpenseTransaction(UUID.randomUUID(), ExpenseCategory.TRAVEL,
+                BigDecimal.ZERO, LocalDate.of(2026, 4, 10), "Invalid amount");
+        assertThrows(BusinessRuleViolationException.class,
+                () -> new TransactionValidationService().validate(invalid));
+    }
+
+    @Test
+    void playerExpenseMustReferenceAPlayer() {
+        PlayerExpenseTransaction invalid = new PlayerExpenseTransaction(
+                UUID.randomUUID(), null, new BigDecimal("100"), LocalDate.now(), "Salary");
         assertThrows(BusinessRuleViolationException.class,
                 () -> new TransactionValidationService().validate(invalid));
     }

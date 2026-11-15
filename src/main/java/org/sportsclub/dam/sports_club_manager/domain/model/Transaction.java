@@ -11,7 +11,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public class Transaction {
+/** Common base class for all financial transactions. */
+public abstract class Transaction {
     private final UUID id;
     @NotNull private final UUID seasonBudgetId;
     @NotNull private final TransactionType type;
@@ -21,25 +22,37 @@ public class Transaction {
     private final String description;
     @NotNull private TransactionStatus status;
 
-    public Transaction(UUID seasonBudgetId, TransactionType type, TransactionCategory category,
-                       BigDecimal amount, LocalDate date, String description) {
-        this.id = UUID.randomUUID();
+    protected Transaction(UUID seasonBudgetId, TransactionType type, TransactionCategory category,
+                          BigDecimal amount, LocalDate date, String description) {
+        this(UUID.randomUUID(), seasonBudgetId, type, category, amount, date, description,
+                TransactionStatus.ACTIVE);
+    }
+
+    protected Transaction(UUID id, UUID seasonBudgetId, TransactionType type,
+                          TransactionCategory category, BigDecimal amount, LocalDate date,
+                          String description, TransactionStatus status) {
+        this.id = id;
         this.seasonBudgetId = seasonBudgetId;
         this.type = type;
         this.category = category;
         this.amount = amount;
         this.date = date;
         this.description = description == null ? "" : description.trim();
-        this.status = TransactionStatus.ACTIVE;
+        this.status = status;
     }
+
     public boolean hasValidFields() {
-        return seasonBudgetId != null && type != null && category != null && amount != null && amount.signum() > 0 && date != null;
+        return id != null && seasonBudgetId != null && type != null && category != null
+                && amount != null && amount.signum() > 0 && date != null && status != null;
     }
+
     public void reverse() {
-        if (status != TransactionStatus.ACTIVE)
+        if (status != TransactionStatus.ACTIVE) {
             throw new InvalidStateTransitionException("Only an active transaction can be reversed.");
+        }
         status = TransactionStatus.REVERSED;
     }
+
     public UUID getId() { return id; }
     public UUID getSeasonBudgetId() { return seasonBudgetId; }
     public TransactionType getType() { return type; }

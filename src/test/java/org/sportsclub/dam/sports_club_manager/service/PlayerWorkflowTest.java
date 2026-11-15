@@ -11,7 +11,7 @@ import org.sportsclub.dam.sports_club_manager.service.validation.DefaultDomainVa
 import org.sportsclub.dam.sports_club_manager.service.validation.RoleAuthorizationService;
 import org.sportsclub.dam.sports_club_manager.service.workflow.DefaultPlayerWorkflowService;
 import org.sportsclub.dam.sports_club_manager.service.workflow.PlayerView;
-import org.sportsclub.dam.sports_club_manager.support.player.InMemoryPlayerStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.player.InMemoryPlayerStore;
 
 import java.time.LocalDate;
 

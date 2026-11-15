@@ -26,14 +26,32 @@ public class Player {
     @Valid private final List<Injury> injuries = new ArrayList<>();
 
     public Player(String name, LocalDate birthDate, String position, Integer jerseyNumber) {
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID(), name, birthDate, position, jerseyNumber, false);
+    }
+
+    private Player(UUID id, String name, LocalDate birthDate, String position,
+                   Integer jerseyNumber, boolean manuallyInactive) {
+        this.id = id;
         this.name = name == null ? null : name.trim();
         this.birthDate = birthDate;
         this.position = position == null ? null : position.trim();
         this.jerseyNumber = jerseyNumber;
+        this.manuallyInactive = manuallyInactive;
         this.status = PlayerStatus.ACTIVE;
         recalculateStatus();
     }
+
+    public static Player reconstitute(UUID id, String name, LocalDate birthDate,
+                                      String position, Integer jerseyNumber,
+                                      boolean manuallyInactive,
+                                      List<Contract> contracts, List<Injury> injuries) {
+        Player player = new Player(id, name, birthDate, position, jerseyNumber, manuallyInactive);
+        if (contracts != null) contracts.forEach(player::addContract);
+        if (injuries != null) injuries.forEach(player::addInjury);
+        player.recalculateStatus();
+        return player;
+    }
+
     public void updateDetails(String name, LocalDate birthDate, String position, Integer jerseyNumber) {
         this.name = name == null ? null : name.trim();
         this.birthDate = birthDate;
@@ -45,11 +63,13 @@ public class Player {
             throw new BusinessRuleViolationException("Contract must belong to this player.");
         if (contract.getStatus() == ContractStatus.ACTIVE && hasActiveContract())
             throw new BusinessRuleViolationException("A player may have only one active contract.");
+        if (contracts.stream().anyMatch(existing -> existing.getId().equals(contract.getId()))) return;
         contracts.add(contract);
     }
     public void addInjury(Injury injury) {
         if (injury == null || !id.equals(injury.getPlayerId()))
             throw new BusinessRuleViolationException("Injury must belong to this player.");
+        if (injuries.stream().anyMatch(existing -> existing.getId().equals(injury.getId()))) return;
         injuries.add(injury);
         recalculateStatus();
     }

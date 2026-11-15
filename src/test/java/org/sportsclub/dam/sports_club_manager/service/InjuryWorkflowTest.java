@@ -7,7 +7,7 @@ import org.sportsclub.dam.sports_club_manager.domain.model.*;
 import org.sportsclub.dam.sports_club_manager.service.audit.InMemoryAuditService;
 import org.sportsclub.dam.sports_club_manager.service.validation.*;
 import org.sportsclub.dam.sports_club_manager.service.workflow.DefaultInjuryWorkflowService;
-import org.sportsclub.dam.sports_club_manager.support.player.InMemoryPlayerStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.player.InMemoryPlayerStore;
 
 import java.time.LocalDate;
 

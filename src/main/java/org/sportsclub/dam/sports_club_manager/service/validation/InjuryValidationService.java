@@ -4,10 +4,9 @@ import org.sportsclub.dam.sports_club_manager.domain.exception.BusinessRuleViola
 import org.sportsclub.dam.sports_club_manager.domain.model.Injury;
 import org.springframework.stereotype.Service;
 
- 
 @Service
-public class InjuryValidationService {
-
+public class InjuryValidationService implements DomainValidator<Injury> {
+    @Override
     public void validate(Injury injury) {
         if (injury == null || !injury.hasValidDates()) {
             throw new BusinessRuleViolationException(

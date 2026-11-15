@@ -6,10 +6,9 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 
- 
 @Service
-public class SeasonBudgetValidationService {
-
+public class SeasonBudgetValidationService implements DomainValidator<SeasonBudget> {
+    @Override
     public void validate(SeasonBudget budget) {
         if (budget == null || budget.getSeason() == null
                 || budget.getTotalAmount() == null

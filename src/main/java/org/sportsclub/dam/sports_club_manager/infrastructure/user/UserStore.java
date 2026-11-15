@@ -1,4 +1,4 @@
-package org.sportsclub.dam.sports_club_manager.support.user;
+package org.sportsclub.dam.sports_club_manager.infrastructure.user;
 import org.sportsclub.dam.sports_club_manager.domain.model.User;
 import java.util.Optional;
 import java.util.UUID;

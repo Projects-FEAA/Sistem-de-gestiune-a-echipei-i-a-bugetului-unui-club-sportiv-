@@ -1,9 +1,11 @@
-package org.sportsclub.dam.sports_club_manager.support.user;
+package org.sportsclub.dam.sports_club_manager.infrastructure.user;
 import org.sportsclub.dam.sports_club_manager.domain.model.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.context.annotation.Profile;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 @Repository
+@Profile("in-memory")
 public class InMemoryUserStore implements UserStore {
     private final Map<UUID, User> users = new ConcurrentHashMap<>();
     @Override public User save(User user) { users.put(user.getId(), user); return user; }

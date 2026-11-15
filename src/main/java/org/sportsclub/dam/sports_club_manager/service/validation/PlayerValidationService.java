@@ -4,13 +4,9 @@ import org.sportsclub.dam.sports_club_manager.domain.exception.BusinessRuleViola
 import org.sportsclub.dam.sports_club_manager.domain.model.Player;
 import org.springframework.stereotype.Service;
 
- 
-
-
-
 @Service
-public class PlayerValidationService {
-
+public class PlayerValidationService implements DomainValidator<Player> {
+    @Override
     public void validate(Player player) {
         if (player == null || player.getName() == null || player.getName().isBlank()
                 || player.getBirthDate() == null

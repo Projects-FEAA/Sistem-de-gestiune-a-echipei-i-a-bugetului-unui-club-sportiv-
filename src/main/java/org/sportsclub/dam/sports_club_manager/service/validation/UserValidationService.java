@@ -4,10 +4,9 @@ import org.sportsclub.dam.sports_club_manager.domain.exception.BusinessRuleViola
 import org.sportsclub.dam.sports_club_manager.domain.model.User;
 import org.springframework.stereotype.Service;
 
- 
 @Service
-public class UserValidationService {
-
+public class UserValidationService implements DomainValidator<User> {
+    @Override
     public void validate(User user) {
         if (user == null || user.getUsername() == null || user.getUsername().isBlank()
                 || user.getPasswordHash() == null || user.getPasswordHash().isBlank()

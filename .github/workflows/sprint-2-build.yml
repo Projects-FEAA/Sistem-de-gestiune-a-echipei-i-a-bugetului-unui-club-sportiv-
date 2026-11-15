@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - sprint-2
+      - de-lucrat
   pull_request:
     branches:
       - main

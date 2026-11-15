@@ -1,4 +1,4 @@
-package org.sportsclub.dam.sports_club_manager.support.budget;
+package org.sportsclub.dam.sports_club_manager.infrastructure.budget;
 import org.sportsclub.dam.sports_club_manager.domain.model.Season;
 import org.sportsclub.dam.sports_club_manager.domain.model.SeasonBudget;
 import java.util.List;

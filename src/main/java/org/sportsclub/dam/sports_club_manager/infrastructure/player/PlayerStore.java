@@ -1,4 +1,4 @@
-package org.sportsclub.dam.sports_club_manager.support.player;
+package org.sportsclub.dam.sports_club_manager.infrastructure.player;
 import org.sportsclub.dam.sports_club_manager.domain.model.Player;
 import java.util.List;
 import java.util.Optional;

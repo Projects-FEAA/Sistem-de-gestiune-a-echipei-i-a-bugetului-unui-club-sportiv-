@@ -21,27 +21,55 @@ public class SeasonBudget {
     @Valid private final List<Transaction> transactions = new ArrayList<>();
 
     public SeasonBudget(Season season, BigDecimal totalAmount) {
+        this(UUID.randomUUID(), season, totalAmount);
+    }
+
+    private SeasonBudget(UUID id, Season season, BigDecimal totalAmount) {
         if (season == null) throw new IllegalArgumentException("Season is required.");
         if (totalAmount == null || totalAmount.signum() <= 0)
             throw new IllegalArgumentException("Budget total must be positive.");
-        this.id = UUID.randomUUID();
+        this.id = id;
         this.season = season;
         this.totalAmount = totalAmount;
     }
+
+    /** Rebuilds a stored aggregate without applying command-time checks in arbitrary DB row order. */
+    public static SeasonBudget reconstitute(UUID id, Season season, BigDecimal totalAmount,
+                                            List<Transaction> transactions) {
+        SeasonBudget budget = new SeasonBudget(id, season, totalAmount);
+        if (transactions != null) {
+            for (Transaction transaction : transactions) {
+                if (transaction == null || !id.equals(transaction.getSeasonBudgetId())
+                        || !transaction.hasValidFields()) {
+                    throw new BusinessRuleViolationException(
+                            "Stored transaction does not belong to this valid season budget.");
+                }
+                if (budget.transactions.stream().anyMatch(existing ->
+                        existing.getId().equals(transaction.getId()))) {
+                    throw new BusinessRuleViolationException("Duplicate stored transaction in season budget.");
+                }
+                budget.transactions.add(transaction);
+            }
+        }
+        if (budget.getRemaining().signum() < 0) {
+            throw new BusinessRuleViolationException("Stored transactions exceed the season budget.");
+        }
+        return budget;
+    }
+
     public void addTransaction(Transaction transaction) {
         if (transaction == null || !id.equals(transaction.getSeasonBudgetId()))
             throw new BusinessRuleViolationException("Transaction must belong to this season budget.");
         if (!transaction.hasValidFields())
             throw new BusinessRuleViolationException("Transaction fields are invalid.");
-        if (transactions.stream().anyMatch(existing -> existing.getId().equals(transaction.getId())))
-            throw new BusinessRuleViolationException("Transaction is already part of this budget.");
-        if (transaction.getStatus() != TransactionStatus.ACTIVE)
-            throw new BusinessRuleViolationException("Only active transactions can be added.");
+        if (transactions.stream().anyMatch(existing -> existing.getId().equals(transaction.getId()))) return;
         if (transaction.getType() == TransactionType.EXPENSE &&
+                transaction.getStatus() == TransactionStatus.ACTIVE &&
                 transaction.getAmount().compareTo(getRemaining()) > 0)
             throw new InsufficientBudgetException("Expense exceeds the remaining season budget.");
         transactions.add(transaction);
     }
+
     public void reverseTransaction(UUID transactionId) {
         Transaction transaction = transactions.stream().filter(t -> t.getId().equals(transactionId)).findFirst()
                 .orElseThrow(() -> new BusinessRuleViolationException("Transaction not found in this budget."));
@@ -49,6 +77,7 @@ public class SeasonBudget {
             throw new InsufficientBudgetException("Cannot reverse income because existing expenses would exceed the remaining budget.");
         transaction.reverse();
     }
+
     public BigDecimal getIncome() { return sum(TransactionType.INCOME); }
     public BigDecimal getSpent() { return sum(TransactionType.EXPENSE); }
     public BigDecimal getRemaining() { return totalAmount.add(getIncome()).subtract(getSpent()); }

@@ -10,28 +10,25 @@ import org.springframework.stereotype.Service;
 import java.util.Set;
 import java.util.stream.Collectors;
 
- 
-
-
 @Service
 public class DefaultDomainValidationService implements DomainValidationService {
     private final Validator validator;
-    private final PlayerValidationService playerValidation;
-    private final ContractValidationService contractValidation;
-    private final InjuryValidationService injuryValidation;
-    private final SeasonBudgetValidationService budgetValidation;
-    private final TransactionValidationService transactionValidation;
-    private final UserValidationService userValidation;
+    private final DomainValidator<Player> playerValidation;
+    private final DomainValidator<Contract> contractValidation;
+    private final DomainValidator<Injury> injuryValidation;
+    private final DomainValidator<SeasonBudget> budgetValidation;
+    private final DomainValidator<Transaction> transactionValidation;
+    private final DomainValidator<User> userValidation;
 
     @Autowired
     public DefaultDomainValidationService(
             Validator validator,
-            PlayerValidationService playerValidation,
-            ContractValidationService contractValidation,
-            InjuryValidationService injuryValidation,
-            SeasonBudgetValidationService budgetValidation,
-            TransactionValidationService transactionValidation,
-            UserValidationService userValidation) {
+            DomainValidator<Player> playerValidation,
+            DomainValidator<Contract> contractValidation,
+            DomainValidator<Injury> injuryValidation,
+            DomainValidator<SeasonBudget> budgetValidation,
+            DomainValidator<Transaction> transactionValidation,
+            DomainValidator<User> userValidation) {
         this.validator = validator;
         this.playerValidation = playerValidation;
         this.contractValidation = contractValidation;
@@ -40,10 +37,6 @@ public class DefaultDomainValidationService implements DomainValidationService {
         this.transactionValidation = transactionValidation;
         this.userValidation = userValidation;
     }
-
-     
-
-
 
     public DefaultDomainValidationService(Validator validator) {
         this(validator, new PlayerValidationService(), new ContractValidationService(),

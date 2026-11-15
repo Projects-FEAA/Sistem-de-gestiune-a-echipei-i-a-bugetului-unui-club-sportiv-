@@ -9,8 +9,8 @@ import org.sportsclub.dam.sports_club_manager.service.audit.InMemoryAuditService
 import org.sportsclub.dam.sports_club_manager.service.computation.ContractCostComputationService;
 import org.sportsclub.dam.sports_club_manager.service.validation.*;
 import org.sportsclub.dam.sports_club_manager.service.workflow.*;
-import org.sportsclub.dam.sports_club_manager.support.budget.InMemorySeasonBudgetStore;
-import org.sportsclub.dam.sports_club_manager.support.player.InMemoryPlayerStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.budget.InMemorySeasonBudgetStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.player.InMemoryPlayerStore;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

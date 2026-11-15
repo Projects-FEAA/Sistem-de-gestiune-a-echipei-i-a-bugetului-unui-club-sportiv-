@@ -4,7 +4,7 @@ import org.sportsclub.dam.sports_club_manager.domain.exception.EntityNotFoundExc
 import org.sportsclub.dam.sports_club_manager.domain.model.*;
 import org.sportsclub.dam.sports_club_manager.service.audit.*;
 import org.sportsclub.dam.sports_club_manager.service.validation.*;
-import org.sportsclub.dam.sports_club_manager.support.player.PlayerStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.player.PlayerStore;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.UUID;

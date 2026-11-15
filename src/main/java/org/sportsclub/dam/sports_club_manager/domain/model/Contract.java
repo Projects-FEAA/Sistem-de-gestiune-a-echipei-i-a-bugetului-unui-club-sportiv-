@@ -25,7 +25,14 @@ public class Contract {
     public Contract(UUID playerId, ContractType contractType, String originClub,
                     BigDecimal monthlySalary, BigDecimal transferFee,
                     LocalDate startDate, LocalDate endDate) {
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID(), playerId, contractType, originClub, monthlySalary,
+                transferFee, startDate, endDate, ContractStatus.PROPOSED);
+    }
+
+    private Contract(UUID id, UUID playerId, ContractType contractType, String originClub,
+                     BigDecimal monthlySalary, BigDecimal transferFee,
+                     LocalDate startDate, LocalDate endDate, ContractStatus status) {
+        this.id = id;
         this.playerId = playerId;
         this.contractType = contractType;
         this.originClub = normalize(originClub);
@@ -33,18 +40,29 @@ public class Contract {
         this.transferFee = transferFee;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.status = ContractStatus.PROPOSED;
+        this.status = status;
     }
+
+    public static Contract reconstitute(UUID id, UUID playerId, ContractType contractType,
+                                        String originClub, BigDecimal monthlySalary,
+                                        BigDecimal transferFee, LocalDate startDate,
+                                        LocalDate endDate, ContractStatus status) {
+        return new Contract(id, playerId, contractType, originClub, monthlySalary,
+                transferFee, startDate, endDate, status);
+    }
+
     private static String normalize(String value) {
         return value == null || value.isBlank() ? null : value.trim();
     }
+
     public boolean hasValidTerms() {
         if (playerId == null || contractType == null || monthlySalary == null ||
                 monthlySalary.signum() <= 0 || transferFee == null || transferFee.signum() < 0 ||
-                startDate == null) return false;
+                startDate == null || status == null) return false;
         if (endDate != null && !endDate.isAfter(startDate)) return false;
         return contractType != ContractType.LOAN || (originClub != null && endDate != null);
     }
+
     public void activate() {
         if (status != ContractStatus.PROPOSED)
             throw new InvalidStateTransitionException("Only a proposed contract can be activated.");

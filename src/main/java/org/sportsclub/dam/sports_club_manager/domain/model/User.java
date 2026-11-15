@@ -14,12 +14,22 @@ public class User {
     private final UUID playerId;
 
     public User(String username, String passwordHash, UserRole role, UUID playerId) {
-        this.id = UUID.randomUUID();
+        this(UUID.randomUUID(), username, passwordHash, role, playerId);
+    }
+
+    private User(UUID id, String username, String passwordHash, UserRole role, UUID playerId) {
+        this.id = id;
         this.username = username == null ? null : username.trim();
         this.passwordHash = passwordHash;
         this.role = role;
         this.playerId = playerId;
     }
+
+    public static User reconstitute(UUID id, String username, String passwordHash,
+                                    UserRole role, UUID playerId) {
+        return new User(id, username, passwordHash, role, playerId);
+    }
+
     public boolean hasValidAssociation() {
         return role != null && ((role == UserRole.PLAYER && playerId != null) ||
                 (role != UserRole.PLAYER && playerId == null));

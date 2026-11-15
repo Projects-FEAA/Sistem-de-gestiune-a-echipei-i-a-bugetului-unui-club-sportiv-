@@ -5,7 +5,7 @@ import org.sportsclub.dam.sports_club_manager.domain.factory.UserFactory;
 import org.sportsclub.dam.sports_club_manager.domain.model.User;
 import org.sportsclub.dam.sports_club_manager.service.audit.*;
 import org.sportsclub.dam.sports_club_manager.service.validation.*;
-import org.sportsclub.dam.sports_club_manager.support.user.UserStore;
+import org.sportsclub.dam.sports_club_manager.infrastructure.user.UserStore;
 import org.springframework.stereotype.Service;
 import java.util.UUID;
 @Service public class UserWorkflowService implements UserWorkflow {

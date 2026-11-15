@@ -4,10 +4,9 @@ import org.sportsclub.dam.sports_club_manager.domain.exception.BusinessRuleViola
 import org.sportsclub.dam.sports_club_manager.domain.model.Contract;
 import org.springframework.stereotype.Service;
 
- 
 @Service
-public class ContractValidationService {
-
+public class ContractValidationService implements DomainValidator<Contract> {
+    @Override
     public void validate(Contract contract) {
         if (contract == null || !contract.hasValidTerms()) {
             throw new BusinessRuleViolationException(

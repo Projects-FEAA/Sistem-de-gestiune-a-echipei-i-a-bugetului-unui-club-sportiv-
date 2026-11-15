@@ -1,13 +1,11 @@
 package org.sportsclub.dam.sports_club_manager.service.computation;
 
-import org.sportsclub.dam.sports_club_manager.domain.enums.TransactionCategory;
+import org.sportsclub.dam.sports_club_manager.domain.enums.ExpenseCategory;
+import org.sportsclub.dam.sports_club_manager.domain.enums.IncomeCategory;
 import org.sportsclub.dam.sports_club_manager.domain.model.Season;
 
 import java.math.BigDecimal;
 import java.util.Map;
-
- 
-
 
 public record BudgetReport(
         Season season,
@@ -15,6 +13,6 @@ public record BudgetReport(
         BigDecimal income,
         BigDecimal spent,
         BigDecimal remaining,
-        Map<TransactionCategory, BigDecimal> incomeByCategory,
-        Map<TransactionCategory, BigDecimal> expensesByCategory) {
+        Map<IncomeCategory, BigDecimal> incomeByCategory,
+        Map<ExpenseCategory, BigDecimal> expensesByCategory) {
 }
